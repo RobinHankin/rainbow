@@ -2,7 +2,6 @@
 ## droplet, inspired by J. E. McDonald 1962. "Caustics of the primary
 ## rainbow", American Journal of Physics 31, p282
 
-source("usefulfuncs.R")
 source("usefulrainbowfuncs.R")
 
 n <- 4/3 # refractive index
