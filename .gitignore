@@ -1,0 +1,5 @@
+*.Rout
+*.R~
+*.tex~
+*.pdf
+.RData
