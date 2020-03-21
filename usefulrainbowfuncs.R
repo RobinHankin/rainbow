@@ -153,9 +153,8 @@ options("refractive_index" = 4/3)
     
 }
 
-`raydist` <- function(d,r){ # r=0 is the front x=-1
+`raydist` <- function(r,M){ 
     ## add start point for ray (initially moving horizontally):
-    M <- rbind(c(-1,d,0),f(d))
     x <- rep(0,nrow(M)-1)
     for(i in seq_along(x)){
         x[i] <- sqrt(sum((M[i,1:2]-M[i+1,1:2])^2))
@@ -173,9 +172,7 @@ options("refractive_index" = 4/3)
     ## How far beyond v[1:2] are we?
     far <- r-sum(x[seq_len(u)])
     ## where are we?  We are at the last point plus a vector:
-
-    print(v)
-    print(far)
+    if(u==4){v[3] <- v[3]-pi}
     return(v[1:2] + far*c(cos(v[3]),sin(v[3])))
 }   # raydist() closes
 
@@ -184,14 +181,16 @@ options("refractive_index" = 4/3)
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
     
-    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
+    plot(NA,xlab='',ylab='',asp=1,axes=T,xlim=xlim,ylim=ylim)
 
     ## plot droplet
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
     points(sin(a),cos(a),type='l')
 
-    for(x in seq(from=0,to=3,len=100)){
-        points(raydist(0.7,x))
+    for(x in seq(from=0.3,to=0.5,len=100)){
+        M <- rbind(c(-1,x,0),f(x))
+        jj <- raydist(3.9,M)
+        points(jj[1],jj[2])
     }
 }
     
