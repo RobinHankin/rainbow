@@ -152,11 +152,21 @@ options("refractive_index" = 4/3)
     
 }
 
-`raydist` <- function(r,M){ 
-    ## add start point for ray (initially moving horizontally):
+`raydist` <- function(r,M){  # argument 'r' is the distance we follow
+                             # the ray (which starts from M[1,]).
+    ## This function uses the fourth column of M which gives the
+    ## refractive index of the material for that leg
+
+    n <- getOption("refractive_index")
+
+    ## First, add start point for ray (initially moving horizontally):
     x <- rep(0,nrow(M)-1)
     for(i in seq_along(x)){
-        x[i] <- sqrt(sum((M[i,1:2]-M[i+1,1:2])^2))
+        x[i] <- (
+            sqrt(sum((M[i,1:2]-M[i+1,1:2])^2)) # Cartesian distance...
+            * M[i,4]  # ...multiplied by the refr.index for that leg
+        )              
+
     }
     x <- c(0,x)
     
@@ -172,10 +182,10 @@ options("refractive_index" = 4/3)
     far <- r-sum(x[seq_len(u)])
     ## where are we?  We are at the last point plus a vector:
     if(u==4){v[3] <- v[3]-pi}
-    return(v[1:2] + far*c(cos(v[3]),sin(v[3])))
+    return(v[1:2] + v[4]*far*c(cos(v[3]),sin(v[3])))
 }   # raydist() closes
 
-`fraunhofer` <- function(xlim=c(-4,1),ylim=c(-4,1)){
+`fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1)){
 
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
@@ -186,10 +196,18 @@ options("refractive_index" = 4/3)
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
     points(sin(a),cos(a),type='l')
 
-    for(x in seq(from=0.3,to=0.5,len=100)){
-        M <- rbind(c(-1,x,0),f(x))
-        jj <- raydist(3.9,M)
-        points(jj[1],jj[2])
+    for(d in seq(from=0,to=9,len=115)){
+        for(x in seq(from=0.2,to=0.9,len=100)){
+            ## Add start point of ray to M:
+            M <- rbind(c(-1,x,0),f(x))  # ray starts horizontally at (-1,d)
+            
+            ## Augment M with a fourth column giving the refractive index
+            ## of the ray:
+            M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's 
+
+            jj <- raydist(d,M)
+            points(jj[1],jj[2],type='p',col='blue',pch=16,cex=0.3)
+        }
     }
 }
     
