@@ -184,7 +184,9 @@ options("refractive_index" = 4/3)
     return(v[1:2] + v[4]*far*c(cos(v[3]),sin(v[3])))
 }   # raydist() closes
 
-`fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1)){
+`fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1),
+                         bvals = seq(from=0,to=9,len=115),
+                         dvals = seq(from=0.2,to=0.99,len=100)){
 
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
@@ -195,8 +197,8 @@ options("refractive_index" = 4/3)
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
     points(sin(a),cos(a),type='l')
 
-    for(b in seq(from=0,to=9,len=115)){
-        for(d in seq(from=0.2,to=0.99,len=100)){
+    for(b in bvals){
+        for(d in dvals){
             ## Add start point of ray to M:
             M <- rbind(c(-1,d,0),f(d))  # ray starts horizontally at (-1,d)
             
