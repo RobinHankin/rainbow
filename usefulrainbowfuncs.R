@@ -164,9 +164,8 @@ options("refractive_index" = 4/3)
     for(i in seq_along(x)){
         x[i] <- (
             sqrt(sum((M[i,1:2]-M[i+1,1:2])^2)) # Cartesian distance...
-            * M[i,4]  # ...multiplied by the refr.index for that leg
-        )              
-
+            /M[i,4]  # ...divided by the refr.index for that leg
+        ) 
     }
     x <- c(0,x)
     
@@ -197,7 +196,7 @@ options("refractive_index" = 4/3)
     points(sin(a),cos(a),type='l')
 
     for(d in seq(from=0,to=9,len=115)){
-        for(x in seq(from=0.2,to=0.9,len=100)){
+        for(x in seq(from=0.2,to=0.99,len=100)){
             ## Add start point of ray to M:
             M <- rbind(c(-1,x,0),f(x))  # ray starts horizontally at (-1,d)
             
