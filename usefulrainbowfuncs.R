@@ -189,8 +189,8 @@ options("refractive_index" = 4/3)
 }   # raydist() closes
 
 `fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1),
-                         bvals = seq(from=0,to=9,len=115),
-                         dvals = seq(from=0.2,to=0.99,len=100)){
+                         bvals = seq(from=0,to=9,len=300),
+                         dvals = seq(from=0.4,to=0.99,len=100)){
 
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
@@ -206,8 +206,8 @@ options("refractive_index" = 4/3)
         for(i in seq_along(dvals)){
             ## Add start point of ray to M:
             d <- dvals[i]
-            ## ray starts horizontally at (-1,d):
-            M <- rbind(c(-1,d,0),f(d,killreflect=TRUE))  
+            ## ray starts horizontally at (-3,d):
+            M <- rbind(c(-3,d,0),f(d,killreflect=TRUE))  
             
             ## Augment M with a fourth column giving the refractive index
             ## of the ray:
