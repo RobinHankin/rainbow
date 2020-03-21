@@ -127,6 +127,19 @@ options("refractive_index" = 4/3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
 }
 
+tangential_ray <- function(...){
+    ## Draw tangential ray
+    drawray(1-small,col='blue',...)
+    M <- f(1)
+    p <- M[3,1:2]
+    points(p[1],p[2],pch=16)
+    segments(
+        p[1],p[2],
+        p[1] + 10*p[2],
+        p[2] - 10*p[1],
+        col='blue',...)
+}
+
 `descartes` <- function(xlim=c(-10,1),ylim=c(-5,1),rays, doreflect=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
@@ -140,20 +153,9 @@ options("refractive_index" = 4/3)
     ## Draw rays
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
-    ## Draw Cartesian ray
+    ## Draw Cartesian and tangential rays:
     drawray(atan(1/n),col='red',lwd=1)
-
-    ## Draw tangential ray
-    drawray(1-small,col='blue')
-    M <- f(1)
-    p <- M[3,1:2]
-    points(p[1],p[2],pch=16)
-    segments(
-        p[1],p[2],
-        p[1] + 10*p[2],
-        p[2] - 10*p[1],
-        col='blue')
-    
+    tangential_ray()
 }
 
 `raydist` <- function(r,M){  # argument 'r' is the distance we follow
@@ -188,7 +190,7 @@ options("refractive_index" = 4/3)
     return(v[1:2] + v[4]*far*c(cos(v[3]),sin(v[3])))
 }   # raydist() closes
 
-`fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1),
+`fraunhofer` <- function(xlim=c(-2,1),ylim=c(-3,1),
                          bvals = seq(from=0,to=9,len=300),
                          dvals = seq(from=0.4,to=1,len=100),
                          cartesian = TRUE,
@@ -216,11 +218,11 @@ options("refractive_index" = 4/3)
             M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
             K[i,] <- raydist(b,M)
         }
-        points(K,type='l',col='blue', ...)
+        points(K, type='l', lwd=0.4, ...)
     }
 
-    ## Now draw the Cartesian ray
+    ## Now draw the Cartesian and tangential rays:
     if(cartesian){drawray(atan(1/n),col='red',lwd=1)}
+    tangential_ray()
 
 }  # function fraunhofer() closes
-    
