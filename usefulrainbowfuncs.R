@@ -190,13 +190,14 @@ options("refractive_index" = 4/3)
 
 `fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1),
                          bvals = seq(from=0,to=9,len=300),
-                         dvals = seq(from=0.4,to=0.99,len=100),
+                         dvals = seq(from=0.4,to=1,len=100),
+                         cartesian = TRUE,
                          ...){
 
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
     
-    plot(NA,xlab='',ylab='',asp=1,axes=T,xlim=xlim,ylim=ylim)
+    plot(NA,xlab='',ylab='',asp=1,axes=TRUE,xlim=xlim,ylim=ylim)
 
     ## plot droplet
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
@@ -215,7 +216,11 @@ options("refractive_index" = 4/3)
             M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
             K[i,] <- raydist(b,M)
         }
-        points(K,type='l',...)
+        points(K,type='l',col='blue', ...)
     }
+
+    ## Now draw the Cartesian ray
+    if(cartesian){drawray(atan(1/n),col='red',lwd=1)}
+
 }  # function fraunhofer() closes
     
