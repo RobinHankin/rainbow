@@ -195,16 +195,16 @@ options("refractive_index" = 4/3)
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
     points(sin(a),cos(a),type='l')
 
-    for(d in seq(from=0,to=9,len=115)){
-        for(x in seq(from=0.2,to=0.99,len=100)){
+    for(b in seq(from=0,to=9,len=115)){
+        for(d in seq(from=0.2,to=0.99,len=100)){
             ## Add start point of ray to M:
-            M <- rbind(c(-1,x,0),f(x))  # ray starts horizontally at (-1,d)
+            M <- rbind(c(-1,d,0),f(d))  # ray starts horizontally at (-1,d)
             
             ## Augment M with a fourth column giving the refractive index
             ## of the ray:
             M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's 
 
-            jj <- raydist(d,M)
+            jj <- raydist(b,M)
             points(jj[1],jj[2],type='p',col='blue',pch=16,cex=0.3)
         }
     }
