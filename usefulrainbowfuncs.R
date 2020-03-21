@@ -51,6 +51,7 @@
 ## We follow the "Arbitrary ray".
 
 f <- function(d){
+  n <- getOption("refractive_index")
   i <- asin(d)
   
   M <- matrix(NA,3,3)
@@ -116,4 +117,35 @@ f <- function(d){
 #  bitofradial(M[1,1],M[1,2],lty=3)
 #  bitofradial(M[2,1],M[2,2],lty=3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
+}
+
+`descartes` <- function(xlim,ylim,...){
+    n <- getOption("refractive_index")
+    small <- 1e-9  # nominal small value for numerical stability
+
+    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
+
+    ## plot droplet
+    a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
+    points(sin(a),cos(a),type='l')
+
+    ## Draw rays
+    for(a in seq(from=0.52,to=1-small,by=0.005)){
+        drawray(a,...)
+    }
+
+    ## Draw Cartesian ray
+    drawray(atan(1/n),col='red',lwd=1)
+
+    ## Draw tangential ray
+    drawray(1-small,col='blue')
+    M <- f(1)
+    p <- M[3,1:2]
+    points(p[1],p[2],pch=16)
+    segments(
+        p[1],p[2],
+        p[1] + 10*p[2],
+        p[2] - 10*p[1],
+        col='blue')
+    
 }

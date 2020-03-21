@@ -3,30 +3,10 @@
 ## rainbow", American Journal of Physics 31, p282
 
 source("usefulrainbowfuncs.R")
-
-n <- 4/3 # refractive index
-small <- 1e-9  # nominal small value for numerical stability
-
-plot(NA,xlab='',ylab='',asp=1,xlim=c(0.2,0.3),ylim=c(-1,-0.9))
-plot(NA,xlab='',ylab='',asp=1,xlim=c(-24,0),ylim=c(-13,1))
-
-a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
-points(sin(a),cos(a),type='l')
-
-for(a in seq(from=0.52,to=1-small,by=0.005)){
-    drawray(a,lwd=0.2)
-}
+options("refractive_index" = 4/3)
 
 
-drawray(atan(1/n),col='red',lwd=1)
-drawray(1-small,col='blue')
-M <- f(1)
-p <- M[3,1:2]
-points(p[1],p[2],pch=16)
-segments(
-    p[1],p[2],
-    p[1] + 10*p[2],
-    p[2] - 10*p[1],
-    col='blue')
-             
-
+pdf(file="plot1.pdf")
+descartes(xlim=c(-10,1),ylim=c(-5,1),lwd=0.1)
+legend("bottomright",pch=NA,lty=1,col=c("red","blue"),legend=c("Cartesian ray","tangential ray"))
+dev.off()
