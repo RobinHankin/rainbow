@@ -190,7 +190,8 @@ options("refractive_index" = 4/3)
 
 `fraunhofer` <- function(xlim=c(-2,1),ylim=c(-2,1),
                          bvals = seq(from=0,to=9,len=300),
-                         dvals = seq(from=0.4,to=0.99,len=100)){
+                         dvals = seq(from=0.4,to=0.99,len=100),
+                         ...){
 
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
@@ -214,7 +215,7 @@ options("refractive_index" = 4/3)
             M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
             K[i,] <- raydist(b,M)
         }
-        points(K,type='l')
+        points(K,type='l',...)
     }
 }  # function fraunhofer() closes
     
