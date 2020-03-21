@@ -1,5 +1,6 @@
 ## Fuctions here are called by rainbow.R
 
+options("refractive_index" = 4/3)
 
 ## Minor trig ratios (not implemented in base R, for some reason):
 `cosec` <- function(x){1/sin(x)}
@@ -50,7 +51,7 @@
 
 ## We follow the "Arbitrary ray".
 
-f <- function(d){
+`f` <- function(d){
   n <- getOption("refractive_index")
   i <- asin(d)
   
@@ -79,7 +80,6 @@ f <- function(d){
   p3 <- jj[which.max(dist_squared),,drop=TRUE] 
   ## Now p3 is the coordinates (x,y) of the third point.
   M[3,1:2] <- p3
-
 
   normal <- atan2(p3[2],p3[1])
   ## (interior) angle of incidence:
@@ -152,3 +152,46 @@ f <- function(d){
         col='blue')
     
 }
+
+`raydist` <- function(d,r){ # r=0 is the front x=-1
+    ## add start point for ray (initially moving horizontally):
+    M <- rbind(c(-1,d,0),f(d))
+    x <- rep(0,nrow(M)-1)
+    for(i in seq_along(x)){
+        x[i] <- sqrt(sum((M[i,1:2]-M[i+1,1:2])^2))
+    }
+    x <- c(0,x)
+    
+    ## u gives how many points have we passed:
+    u <- sum(r>cumsum(x))
+    ## What is the last point we have passed?
+    v <- M[u,,drop=TRUE]
+
+    ## v[1:2] is the (x,y) coordinates of the last point we passed,
+    ## and v[3] is the angle of the ray we are on.
+
+    ## How far beyond v[1:2] are we?
+    far <- r-sum(x[seq_len(u)])
+    ## where are we?  We are at the last point plus a vector:
+
+    print(v)
+    print(far)
+    return(v[1:2] + far*c(cos(v[3]),sin(v[3])))
+}   # raydist() closes
+
+`fraunhofer` <- function(xlim=c(-4,1),ylim=c(-4,1)){
+
+    n <- getOption("refractive_index")
+    small <- 1e-9  # nominal small value for numerical stability
+    
+    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
+
+    ## plot droplet
+    a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
+    points(sin(a),cos(a),type='l')
+
+    for(x in seq(from=0,to=3,len=100)){
+        points(raydist(0.7,x))
+    }
+}
+    
