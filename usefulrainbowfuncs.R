@@ -92,7 +92,7 @@ f <- function(d){
   return(M)
 }
 
-`drawray` <- function(d,...){
+`drawray` <- function(d,doreflect=TRUE,...){
   M <- f(d)
   segments(x0=-10,y0=d,x1=-sqrt(1-d^2),y1=d,...)
   segments(
@@ -105,7 +105,11 @@ f <- function(d){
       ...)
 
  ## separate treatment for total internal reflection:
-  if(M[3,3]>0){l <- 10}else{l <- 0.3}
+  if(M[3,3]>0){
+      l <- 10  # transmitted ray
+  } else {
+     l <- ifelse(doreflect,0.3,0)   # reflected ray
+  }
   
   segments(
       x0=M[3,1],y0=M[3,2],
@@ -119,7 +123,7 @@ f <- function(d){
 #  bitofradial(M[3,1],M[3,2],lty=3)
 }
 
-`descartes` <- function(xlim,ylim,...){
+`descartes` <- function(xlim,ylim,rays, doreflect=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
@@ -130,9 +134,8 @@ f <- function(d){
     points(sin(a),cos(a),type='l')
 
     ## Draw rays
-    for(a in seq(from=0.52,to=1-small,by=0.005)){
-        drawray(a,...)
-    }
+    if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
+    for(a in rays){ drawray(a,doreflect=doreflect, ...) }
 
     ## Draw Cartesian ray
     drawray(atan(1/n),col='red',lwd=1)
