@@ -51,7 +51,7 @@ options("refractive_index" = 4/3)
 
 ## We follow the "Arbitrary ray".
 
-`f` <- function(d){
+`f` <- function(d, killreflect=FALSE){
   n <- getOption("refractive_index")
   i <- asin(d)
   
@@ -87,7 +87,11 @@ options("refractive_index" = 4/3)
   if(abs(n*incidence) < 1){ # that is, if the ray can esape
       M[3,3] <- pi+(asin(n*incidence) +  normal)
   } else { # total internal reflection...
-      M[3,3] <- normal -incidence
+      if(killreflect){
+          M[3,3] <- NA
+      } else {
+          M[3,3] <- normal -incidence
+      }
   }      
   return(M)
 }
@@ -197,18 +201,20 @@ options("refractive_index" = 4/3)
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
     points(sin(a),cos(a),type='l')
 
+    K <- matrix(NA,length(dvals),2)
     for(b in bvals){
-        for(d in dvals){
+        for(i in seq_along(dvals)){
             ## Add start point of ray to M:
-            M <- rbind(c(-1,d,0),f(d))  # ray starts horizontally at (-1,d)
+            d <- dvals[i]
+            ## ray starts horizontally at (-1,d):
+            M <- rbind(c(-1,d,0),f(d,killreflect=TRUE))  
             
             ## Augment M with a fourth column giving the refractive index
             ## of the ray:
-            M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's 
-
-            jj <- raydist(b,M)
-            points(jj[1],jj[2],type='p',col='blue',pch=16,cex=0.3)
+            M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
+            K[i,] <- raydist(b,M)
         }
+        points(K,type='l')
     }
-}
+}  # function fraunhofer() closes
     
