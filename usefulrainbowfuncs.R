@@ -123,7 +123,7 @@ options("refractive_index" = 4/3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
 }
 
-`descartes` <- function(xlim,ylim,rays, doreflect=TRUE, ...){
+`descartes` <- function(xlim=c(-10,1),ylim=c(-5,1),rays, doreflect=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
@@ -136,7 +136,6 @@ options("refractive_index" = 4/3)
     ## Draw rays
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
-
     ## Draw Cartesian ray
     drawray(atan(1/n),col='red',lwd=1)
 
