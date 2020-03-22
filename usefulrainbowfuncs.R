@@ -132,7 +132,6 @@ tangential_ray <- function(...){
     drawray(1-small,col='blue',...)
     M <- f(1)
     p <- M[3,1:2]
-    points(p[1],p[2],pch=16)
     segments(
         p[1],p[2],
         p[1] + 10*p[2],
@@ -153,9 +152,10 @@ tangential_ray <- function(...){
     ## Draw rays
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
-    ## Draw Cartesian and tangential rays:
+    ## Draw Cartesian, tangential, and maximal rays:
     drawray(atan(1/n),col='red',lwd=1)
     tangential_ray()
+    drawray(sqrt(16/15-n^2/15),col="green",lwd=1)
 }
 
 `raydist` <- function(r,M){  # argument 'r' is the distance we follow
@@ -221,8 +221,8 @@ tangential_ray <- function(...){
         points(K, type='l', lwd=0.4, ...)
     }
 
-    ## Now draw the Cartesian and tangential rays:
+    ## Now draw the Cartesian,tangential, and maximal rays:
     if(cartesian){drawray(atan(1/n),col='red',lwd=1)}
     tangential_ray()
-
+    drawray(sqrt(16/15-n^2/15),col="green")
 }  # function fraunhofer() closes
