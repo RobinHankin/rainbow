@@ -156,6 +156,11 @@ tangential_ray <- function(...){
     drawray(atan(1/n),col='red',lwd=1)
     tangential_ray()
     drawray(sqrt(16/15-n^2/15),col="green",lwd=1)
+
+    legend("bottomright",pch=NA,lty=1,
+           col=c("red","green","blue"),
+           legend=c("Cartesian ray","extremal ray","tangential ray")
+           )
 }
 
 `raydist` <- function(r,M){  # argument 'r' is the distance we follow
@@ -225,4 +230,8 @@ tangential_ray <- function(...){
     if(cartesian){drawray(atan(1/n),col='red',lwd=1)}
     tangential_ray()
     drawray(sqrt(16/15-n^2/15),col="green")
+    legend("bottomright",pch=NA,lty=1,
+           col=c("red","green","blue"),
+           legend=c("Cartesian ray","extremal ray","tangential ray")
+           )
 }  # function fraunhofer() closes

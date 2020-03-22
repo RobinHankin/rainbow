@@ -8,12 +8,10 @@ options("refractive_index" = 4/3)
 
 pdf(file="plot1.pdf")
 descartes(xlim=c(-10,1),ylim=c(-5,1),lwd=0.1)
-legend("bottomright",pch=NA,lty=1,col=c("red","blue"),legend=c("Cartesian ray","tangential ray"))
 dev.off()
 
 pdf(file="plot2.pdf")
 descartes(xlim=c(-1,1),ylim=c(-1,1),lwd=0.1)
-legend("bottomright",pch=NA,lty=1,col=c("red","blue"),legend=c("Cartesian ray","tangential ray"))
 dev.off()
 
 pdf(file="plot3.pdf")
@@ -31,7 +29,6 @@ dev.off()
 
 pdf(file="plot6.pdf")
 fraunhofer(xlim=c(-0.4,0.4),ylim=c(-1,-0.7), bvals = seq(from=5,to=15,len=400), dvals =  seq(from = 0.4, to = 1, len = 100) )
-legend("bottomright",pch=NA,col=c("red","blue"),legend=c("Cartesian ray","wave front"))
 dev.off()
 
 pdf(file="plot7.pdf")
