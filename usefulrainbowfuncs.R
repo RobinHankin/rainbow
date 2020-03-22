@@ -140,11 +140,11 @@ tangential_ray <- function(...){
         col='blue',...)
 }
 
-`descartes` <- function(xlim=c(-10,1),ylim=c(-5,1),rays, doreflect=TRUE, ...){
+`descartes` <- function(xlim=c(-10,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
-    plot(NA,xlab='',ylab='',asp=1,axes=TRUE,xlim=xlim,ylim=ylim)
+    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
 
     ## plot droplet
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
@@ -157,12 +157,13 @@ tangential_ray <- function(...){
     drawray(atan(1/n),col='red',lwd=1)
     tangential_ray()
     drawray(sqrt(16/15-n^2/15),col="green",lwd=1)
-
-    legend("bottomright",pch=NA,lty=1,
-           col=c("red","green","blue"),
-           legend=c("Cartesian ray","extremal ray","tangential ray")
-           )
-}
+    if(dolegend){
+      legend("bottomright",pch=NA,lty=1,
+             col=c("red","green","blue"),
+             legend=c("Cartesian ray","extremal ray","tangential ray")
+             )
+    }
+}  # function descartes() closes
 
 `raydist` <- function(r,M){  # argument 'r' is the distance we follow
                              # the ray (which starts from M[1,]).
