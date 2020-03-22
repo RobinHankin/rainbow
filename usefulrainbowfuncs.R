@@ -140,7 +140,7 @@ tangential_ray <- function(...){
         col='blue',...)
 }
 
-`descartes` <- function(xlim=c(-10,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
+`descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
