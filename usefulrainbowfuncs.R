@@ -85,7 +85,7 @@ options("refractive_index" = 4/3)
   ## (interior) angle of incidence:
   incidence <- M[2,3]-normal
   if(abs(n*sin(incidence)) < 1){ # that is, if the ray can esape
-      M[3,3] <- pi+(asin(n*incidence) +  normal)
+      M[3,3] <- pi+(asin(n*sin(incidence)) +  normal)
   } else { # total internal reflection...
       if(killreflect){
           M[3,3] <- NA
