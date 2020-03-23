@@ -206,7 +206,7 @@ tangential_ray <- function(...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
     
-    plot(NA,xlab='',ylab='',asp=1,axes=TRUE,xlim=xlim,ylim=ylim)
+    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
 
     ## plot droplet
     a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
