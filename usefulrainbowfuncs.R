@@ -127,7 +127,7 @@ options("refractive_index" = 4/3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
 }
 
-tangential_ray <- function(...){
+`tangential_ray` <- function(n = getOption("refractive_index"), ...){
     small <- 1e-9
     ## Draw tangential ray
     drawray(1-small,col='blue',...)
@@ -138,6 +138,14 @@ tangential_ray <- function(...){
         p[1] + 10*p[2],
         p[2] - 10*p[1],
         col='blue',...)
+}
+
+`cartesian_ray` <- function(n = getOption("refractive_index"), ...){
+    drawray(sqrt((4-n^2)/3),col='red',lwd=1,...)
+}
+
+`maximal_ray` <- function(n = getOption("refractive_index"), ...){
+    drawray(sqrt(16/15-n^2/15),col="green",lwd=1,...)
 }
 
 `descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
@@ -154,9 +162,9 @@ tangential_ray <- function(...){
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
     ## Draw Cartesian, tangential, and maximal rays:
-    drawray(sqrt((4-n^2)/3),col='red',lwd=1)
+    cartesian_ray()
     tangential_ray()
-    drawray(sqrt(16/15-n^2/15),col="green",lwd=1)
+    maximal_ray()
     if(dolegend){
       legend("bottomright",pch=NA,lty=1,
              col=c("red","green","blue"),
@@ -229,9 +237,9 @@ tangential_ray <- function(...){
     }
 
     ## Now draw the Cartesian,tangential, and maximal rays:
-    if(cartesian){drawray(sqrt((4-n^2)/3),col='red',lwd=1)}
+    if(cartesian){cartesian_ray()}
     tangential_ray()
-    drawray(sqrt(16/15-n^2/15),col="green")
+    maximal_ray()
     legend("bottomright",pch=NA,lty=1,
            col=c("red","green","blue"),
            legend=c("Cartesian ray","extremal ray","tangential ray")
