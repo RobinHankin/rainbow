@@ -154,7 +154,7 @@ tangential_ray <- function(...){
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
     ## Draw Cartesian, tangential, and maximal rays:
-    drawray(atan(1/n),col='red',lwd=1)
+    drawray(sqrt((4-n^2)/3),col='red',lwd=1)
     tangential_ray()
     drawray(sqrt(16/15-n^2/15),col="green",lwd=1)
     if(dolegend){
@@ -229,7 +229,7 @@ tangential_ray <- function(...){
     }
 
     ## Now draw the Cartesian,tangential, and maximal rays:
-    if(cartesian){drawray(atan(1/n),col='red',lwd=1)}
+    if(cartesian){drawray(sqrt((4-n^2)/3),col='red',lwd=1)}
     tangential_ray()
     drawray(sqrt(16/15-n^2/15),col="green")
     legend("bottomright",pch=NA,lty=1,
