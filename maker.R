@@ -31,7 +31,12 @@ fraunhofer()
 dev.off()
 
 pdf(file="fraunhofer2.pdf",height=9, width=9)
-fraunhofer(xlim=c(-0.4,0.4),ylim=c(-1,-0.7), bvals = seq(from=5,to=15,len=400), dvals =  seq(from = 0.4, to = 1, len = 100) )
+fraunhofer(xlim=c(-0.4,0.4), ylim=c(-1,-0.7),
+           bvals = seq(from=5.5,to=7.5,len=200),
+           dvals = sort(unique(c(
+               seq(from = 0.40, to = 1, len = 100),
+               seq(from = 0.96, to = 1, len = 100),
+               seq(from = 0.99, to = 1, len = 10)))))
 dev.off()
 
 pdf(file="fraunhofer3.pdf",height=9, width=9)
