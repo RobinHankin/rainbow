@@ -141,11 +141,11 @@ options("refractive_index" = 4/3)
 }
 
 `cartesian_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt((4-n^2)/3),col='red',lwd=1,...)
+    drawray(sqrt((4-n^2)/3),col='red', ...)
 }
 
 `maximal_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt(16/15-n^2/15),col="green",lwd=1,...)
+    drawray(sqrt(16/15-n^2/15),col="green", ...)
 }
 
 `descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
@@ -245,3 +245,4 @@ options("refractive_index" = 4/3)
            legend=c("Cartesian ray","extremal ray","tangential ray")
            )
 }  # function fraunhofer() closes
+
