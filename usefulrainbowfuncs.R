@@ -148,7 +148,7 @@ options("refractive_index" = 4/3)
     drawray(sqrt(16/15-n^2/15),col="green", ...)
 }
 
-`descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),rays, doreflect=TRUE, dolegend=TRUE, ...){
+`descartes` <- function(xlim=c(-5,1),ylim=c(-5,1), rays, doreflect=TRUE, dolegend=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
@@ -208,7 +208,7 @@ options("refractive_index" = 4/3)
 `fraunhofer` <- function(xlim=c(-2,1),ylim=c(-3,1),
                          bvals = seq(from=0,to=9,len=300),
                          dvals = seq(from=0.4,to=1,len=100),
-                         cartesian = TRUE,
+                         cartesian = TRUE, dolegend=TRUE,
                          ...){
 
     n <- getOption("refractive_index")
@@ -240,55 +240,36 @@ options("refractive_index" = 4/3)
     if(cartesian){cartesian_ray()}
     tangential_ray()
     maximal_ray()
-    legend("bottomright",pch=NA,lty=1,
-           col=c("red","green","blue"),
-           legend=c("Cartesian ray","extremal ray","tangential ray")
-           )
+    if(dolegend){
+        legend("bottomright",pch=NA,lty=1,
+               col=c("red","green","blue"),
+               legend=c("Cartesian ray","extremal ray","tangential ray")
+               )
+    }
 }  # function fraunhofer() closes
 
-## The following function gives Cartesian coordinates of McDonald's
-## pivot point to transform his inconvenient coordinates (rho,gamma)
-## to more convenient ones along and normal to the emergent Cartesian
-## ray.
+`caustic_single` <- function(d, n=getOption("refractive_index")){
+    stopifnot(length(d)==1)
+    if(d==1){return(drop(f(1)[3,1:2]))}
+    small <- 1e-7
 
-`pivot_point` <- function(n = getOption("refractive_index")){
-    jj <- f(sqrt((4-n^2)/3))[3,]  # emergent of the Cartesian ray
-    x0 <- jj[1]
-    y0 <- jj[2]
-    g <- tan(jj[3]) # M[,3] gives angles, we need the gradient
+    jj0 <- f(d-small/2)[3,,drop=TRUE]
+    jj1 <- f(d+small/2)[3,,drop=TRUE]
 
-    a <- -(x0+y0*g)/(1+g^2)
-    return(c(x0+a,y0+a*g))
-}
+    x0 <- jj0[1]
+    y0 <- jj0[2]
+    g0 <- tan(jj0[3])
+
+    x1 <- jj1[1]
+    y1 <- jj1[2]
+    g1 <- tan(jj1[3])
+
+    return(c(
+        x0 + ((y1-y0) + (g1*x0-g1*x1))/(g0-g1),
+        y0 + g0*((y1-y0) + g1*(x0-x1))/(g0-g1)
+    ))
+} 
 
 `caustic` <- function(d, n=getOption("refractive_index")){
-    ## First determine McDonald's inconvenient (rho,gamma) as a function of d
-    D1 <- f(sqrt((4-n^2)/3))[3,3] # deviation of Cartesian ray
-    abline(-1,tan(D1),col='purple')
-    D <- pi - sapply(d,function(o){f(o)[3,3]})
-
-    i <- asin(d)    # sin(i) = d
-    r <- asin(d/n)  # sin(r) = sin(i)/n
-    gamma <- atan(2*tan(i)*(1-2*cos(i)/n*cos(r)))
-    rho   <- sin(i)/sin(gamma)
-    dee <- D-D1  # McDonald's "d"; here called "dee" to distinguish
-                 # from argument d
-
-    ## Following terminology from McDonald:
-    epsilon <- gamma-dee
-    along  <- rho*cos(epsilon)
-    normal <- rho*sin(epsilon) - sqrt((4-n^2)/3) # rho.sin(e) - sin(I)
-
-    ## variables 'along' and 'normal' need to be translated into
-    ## regular Cartesian coordinates in which the center of the drop
-    ## is at (0,0):
-
-    normal <- -normal
-    jj <- pivot_point()
-    theta <- -atan2(jj[2],jj[1])
-    return(cbind(
-        x=jj[1] + normal*sin(theta) - along*cos(theta),
-        y=jj[2] + normal*cos(theta) + along*sin(theta)
-    )) 
-        
-}   
+    t(sapply(d,caustic_single))
+}

@@ -15,7 +15,14 @@ dev.off()
 
 pdf(file="descartes3.pdf",height=9, width=9)
 small <- 1e-9  # nominal small value for numerical stability
-descartes(xlim=c(0.1,0.4),ylim=c(-1.1,-0.9),lwd=0.1,rays=seq(from=0.82,to=1-small,by=0.001))
+descartes(xlim=c(0.1,0.4),ylim=c(-1.1,-0.9),
+          lwd=0.1,dolegend=FALSE,
+          rays=seq(from=0.82,to=1-small,by=0.001))
+points(caustic(seq(from=0.93,to=1,len=100)),type="l",col="yellow")
+legend("bottomright",pch=NA,lty=1,
+       col=c("red","green","blue","yellow"),
+       legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
+       )
 dev.off()
 
 pdf(file="descartes4.pdf",height=9, width=9)
@@ -31,18 +38,37 @@ fraunhofer()
 dev.off()
 
 pdf(file="fraunhofer2.pdf",height=9, width=9)
-fraunhofer(xlim=c(-0.4,0.4), ylim=c(-1,-0.7),
+fraunhofer(xlim=c(-0.4,0.4), ylim=c(-1,-0.7), dolegend=FALSE,
            bvals = seq(from=5.5,to=7.5,len=200),
            dvals = sort(unique(c(
                seq(from = 0.40, to = 1, len = 100),
                seq(from = 0.96, to = 1, len = 100),
                seq(from = 0.99, to = 1, len = 10)))))
+points(caustic(seq(from=0.93,to=1,len=100)),type="l",col="yellow")
+legend("bottomright",pch=NA,lty=1,
+       col=c("red","green","blue","yellow"),
+       legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
+       )
 dev.off()
 
 pdf(file="fraunhofer3.pdf",height=9, width=9)
-fraunhofer(xlim=c(0.2,0.4),ylim=c(-1,-0.9), bvals = seq(from=6.3,to=6.8,len=100),dvals = seq(from = 0.4, to = 1, len = 9000))
+fraunhofer(xlim=c(0.2,0.4),ylim=c(-1,-0.9),
+           bvals = seq(from=6.3,to=6.8,len=100),
+           dvals = seq(from = 0.4, to = 1, len = 9000),
+           dolegend=FALSE)
+points(caustic(seq(from=0.93,to=1,len=100)),type="l",col="yellow")
+legend("bottomright",pch=NA,lty=1,
+       col=c("red","green","blue","yellow"),
+       legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
+       )
 dev.off()
 
 pdf(file="fraunhofer4.pdf",height=9, width=9)
-fraunhofer(xlim=c(0.2,0.3),ylim=c(-1,-0.94), bvals = seq(from=6.4,to=6.6,len=100),dvals = seq(from = 0.4, to = 1, len = 9000))
+fraunhofer(xlim=c(0.2,0.3),ylim=c(-1,-0.94),dolegend=FALSE,
+           bvals = seq(from=6.4,to=6.6,len=100),
+           dvals = seq(from = 0.4, to = 1, len = 9000))
+legend("bottomright",pch=NA,lty=1,
+       col=c("red","green","blue","yellow"),
+       legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
+       )
 dev.off()
