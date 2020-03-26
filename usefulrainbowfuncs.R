@@ -150,7 +150,7 @@ options("refractive_index" = 4/3)
         p[1],p[2],
         p[1] + 10*p[2],
         p[2] - 10*p[1],
-        col='blue',...)
+        ...)
 }
 
 `cartesian_ray` <- function(n = getOption("refractive_index"), ...){
