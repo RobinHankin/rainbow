@@ -250,9 +250,9 @@ options("refractive_index" = 4/3)
     }
 
     ## Now draw the Cartesian,tangential, and maximal rays:
-    if(cartesian){cartesian_ray()}
-    tangential_ray()
-    maximal_ray()
+    if(cartesian){cartesian_ray(col="red")}
+    tangential_ray(col="blue")
+    maximal_ray(col="green")
     if(dolegend){
         legend("bottomright",pch=NA,lty=1,
                col=c("red","green","blue"),
