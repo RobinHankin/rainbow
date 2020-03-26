@@ -5,6 +5,7 @@
 source("usefulrainbowfuncs.R")
 options("refractive_index" = 4/3)
 
+
 pdf(file="descartes1.pdf",height=9, width=9)
 descartes(xlim=c(-10,1),ylim=c(-5,1),lwd=0.1)
 dev.off()
@@ -27,6 +28,7 @@ dev.off()
 
 pdf(file="descartes4.pdf",height=9, width=9)
 descartes(xlim=c(0.5,1),ylim=c(0,0.5),lwd=0.1,dolegend=FALSE)
+n <- getOption("refractive_index")
 points(caustic(seq(from=0,to=sqrt((4-n^2)/3),len=100),leg=2),type="l",col="yellow")
 legend("topright",pch=NA,lty=1,
        col=c("red","green","blue","yellow"),
