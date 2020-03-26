@@ -81,9 +81,16 @@ pdf(file="mcdonald.pdf", height=5, width=9)
 mcdonald()
 dev.off()
 
-
 pdf(file="spectrum.pdf",height=9,width=9)
 spectrum()
+dev.off()
+
+pdf(file="spectrum_realistic.pdf",height=9,width=9)
+spectrum(
+    RI = seq(from = 1.331,  # RI for nominal red light, 700nm
+             to   = 1.338,  # RI for nominal violet light, 425nm
+             len = 100)
+    )
 dev.off()
 
 
