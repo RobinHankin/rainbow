@@ -143,7 +143,7 @@ options("refractive_index" = 4/3)
 `tangential_ray` <- function(n = getOption("refractive_index"), ...){
     small <- 1e-9
     ## Draw tangential ray
-    drawray(1-small,col='blue',...)
+    drawray(1-small,...)
     M <- f(1)
     p <- M[3,1:2]
     segments(
@@ -154,11 +154,11 @@ options("refractive_index" = 4/3)
 }
 
 `cartesian_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt((4-n^2)/3),col='red', ...)
+    drawray(sqrt((4-n^2)/3), ...)
 }
 
 `maximal_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt(16/15-n^2/15),col="green", ...)
+    drawray(sqrt(16/15-n^2/15), ...)
 }
 
 `descartes` <- function(xlim=c(-5,1),ylim=c(-5,1), rays, doreflect=TRUE, dolegend=TRUE, ...){
@@ -175,9 +175,9 @@ options("refractive_index" = 4/3)
     if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
     ## Draw Cartesian, tangential, and maximal rays:
-    cartesian_ray()
-    tangential_ray()
-    maximal_ray()
+    cartesian_ray(col="red")
+    tangential_ray(col="blue")
+    maximal_ray(col="green")
     if(dolegend){
       legend("bottomright",pch=NA,lty=1,
              col=c("red","green","blue"),
