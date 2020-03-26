@@ -82,8 +82,8 @@ mcdonald()
 dev.off()
 
 
-pdf(file="rainbow.pdf",height=9,width=9)
-rainbow()
+pdf(file="spectrum.pdf",height=9,width=9)
+spectrum()
 dev.off()
 options("refractive_index" = 4/3)
 
