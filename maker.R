@@ -85,5 +85,5 @@ dev.off()
 pdf(file="spectrum.pdf",height=9,width=9)
 spectrum()
 dev.off()
-options("refractive_index" = 4/3)
+
 
