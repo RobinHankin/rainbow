@@ -261,13 +261,13 @@ options("refractive_index" = 4/3)
     }
 }  # function fraunhofer() closes
 
-`caustic_single` <- function(d, n=getOption("refractive_index")){
+`caustic_single` <- function(d, leg=3, n=getOption("refractive_index")){
     stopifnot(length(d)==1)
-    if(d==1){return(drop(f(1)[3,1:2]))}
+    if(d==1){return(drop(f(1)[leg,1:2]))}
     small <- 1e-7
 
-    jj0 <- f(d-small/2)[3,,drop=TRUE]
-    jj1 <- f(d+small/2)[3,,drop=TRUE]
+    jj0 <- f(d-small/2)[leg,,drop=TRUE]
+    jj1 <- f(d+small/2)[leg,,drop=TRUE]
 
     x0 <- jj0[1]
     y0 <- jj0[2]
@@ -283,8 +283,8 @@ options("refractive_index" = 4/3)
     ))
 } 
 
-`caustic` <- function(d, n=getOption("refractive_index")){
-    t(sapply(d,caustic_single))
+`caustic` <- function(d, leg=3, n=getOption("refractive_index")){
+    t(sapply(d,caustic_single,leg=leg))
 }
 
 `cart_to_mcdonald` <- function(P,n=getOption("refractive_index")){
