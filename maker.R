@@ -67,6 +67,7 @@ pdf(file="fraunhofer4.pdf",height=9, width=9)
 fraunhofer(xlim=c(0.2,0.3),ylim=c(-1,-0.94),dolegend=FALSE,
            bvals = seq(from=6.4,to=6.6,len=100),
            dvals = seq(from = 0.4, to = 1, len = 9000))
+points(caustic(seq(from=0.93,to=1,len=100)),type="l",col="yellow")
 legend("bottomright",pch=NA,lty=1,
        col=c("red","green","blue","yellow"),
        legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
