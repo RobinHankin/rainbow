@@ -73,3 +73,9 @@ legend("bottomright",pch=NA,lty=1,
        legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
        )
 dev.off()
+
+pdf(file="mcdonald.pdf", height=5, width=9)
+mcdonald()
+dev.off()
+
+

@@ -294,7 +294,7 @@ options("refractive_index" = 4/3)
     jj <- f(sqrt((4-n^2)/3))[3,,drop=TRUE]
     x0 <- jj[1]
     y0 <- jj[2]
-    theta <- atan(jj[3]) - pi/2
+    theta <- (jj[3]) - pi/2
 
     ## first subtract off the exit-point:
     x <- P[,1]-x0
@@ -309,27 +309,29 @@ options("refractive_index" = 4/3)
 
 `mcdonald` <- function(...){
     n <- getOption("refractive_index")
-    plot(NA,xlim=c(-0.2,0.2),ylim=c(0.14, -0.02),asp=1,pty="m")
+    plot(NA,xlim=c(-0.2,0.2),ylim=c(0.12, -0.02),asp=1,pty="m",xlab="",ylab="",axes=FALSE)
+    box()
 
     a <- seq(from=4.6,to=5.4,len=100)
     points(cart_to_mcdonald(cbind(cos(a),sin(a))),type='l')
-    points(cart_to_mcdonald(caustic(seq(from=0.93,to=1,len=100))),type="o",col="yellow",lwd=3)
+    points(cart_to_mcdonald(caustic(seq(from=0.93,to=1,len=100))),type="l",col="yellow",lwd=3)
 
+    ## Draw the Cartesian ray:
     jj <- cart_to_mcdonald(f(sqrt((4-n^2)/3))[,1:2])
     segments(jj[2,1],jj[2,2],jj[3,1],jj[3,2],lwd=2,col='red')
     arrows(0,0,-0.2,0,lwd=2,col='red')    
     text(-0.15,-0.005,"Cartesian ray")
-    jj <- cart_to_mcdonald(rbind(f(1)[3,1:2]))
-    points(jj ,type="p",pch=16,col="blue",lwd=3)
+    
     ## code taken from fraunhofer():
 
-    dvals <- sort(unique(
+    dvals <- sort(unique(c(
         seq(from=0.40,to=1,len=100),
         seq(from=0.90,to=1,len=100),
-        seq(from=0.99,to=1,len=100)
-        ))
+        seq(from=0.99,to=1,len=100),
+        seq(from=0.999,to=1,len=100)
+        )))
         
-    bvals <- seq(from=6.3,to=6.7,by=0.05)
+    bvals <- seq(from=6.4,to=6.6,by=0.1)
     
     K <- matrix(NA,length(dvals),2)
     for(b in bvals){
@@ -344,21 +346,28 @@ options("refractive_index" = 4/3)
             M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
             K[i,] <- raydist(b,M)
         }
-        
-        points(cart_to_mcdonald(K), type='o', lwd=0.4, ...)
+        points(cart_to_mcdonald(K), type='l', lwd=0.4, ...)
     }
 
+    jj <- drawray(1-1e-9,drawsegments=FALSE)
+    pfrom <- cart_to_mcdonald(jj[,1:2])
+    pto   <- cart_to_mcdonald(jj[,3:4])
+    segments(pfrom[,1],pfrom[,2],pto[,1],pto[,2],col="blue")
+
+    jj <- drawray(sqrt(16/15-n^2/15),drawsegments=FALSE)
+    pfrom <- cart_to_mcdonald(jj[,1:2])
+    pto   <- cart_to_mcdonald(jj[,3:4])
+    segments(pfrom[,1],pfrom[,2],pto[,1],pto[,2],col="green")
 
 
-    for(a in seq(from=0.52,to=1-small,by=0.005)){
-        drawray(a,doreflect=doreflect, ...)
-    }
+    legend("bottomleft",pch=NA,lty=1,
+           col=c("red","green","blue","yellow","black"),
+           legend = c("Cartesian ray",
+                      "extremal ray",
+                      "tangential ray",
+                      "caustic","wavefront")
+           )
 
 
 }
 
-
-
-pdf(file="mcdonald.pdf", height=5, width=9)
-mcdonald()
-dev.off()
