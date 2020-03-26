@@ -96,36 +96,49 @@ options("refractive_index" = 4/3)
   return(M)
 }
 
-`drawray` <- function(d,doreflect=TRUE,...){
-  M <- f(d)
-  segments(x0=-10,y0=d,x1=-sqrt(1-d^2),y1=d,...)
-  segments(
-      x0=M[1,1],y0=M[1,2],
-      x1=M[2,1],y1=M[2,2],
-      ...)
-  segments(
-      x0=M[2,1],y0=M[2,2],
-      x1=M[3,1],y1=M[3,2],
-      ...)
+`drawray` <- function(d,doreflect=TRUE,drawsegments=TRUE, ...){
+    M <- f(d)
+    
+    x0 <- -10
+    y0 <- d
+    x1 <- -sqrt(1-d^2)
+    y1 <- d
 
- ## separate treatment for total internal reflection:
-  if(M[3,3]>0){
-      l <- 10  # transmitted ray
-  } else {
-     l <- ifelse(doreflect,0.3,0)   # reflected ray
-  }
-  
-  segments(
-      x0=M[3,1],y0=M[3,2],
-      x1=M[3,1]-l*cos(M[3,3]),
-      y1=M[3,2]-l*sin(M[3,3]),
-      ...)
+    x0 <- c(x0,  M[1,1])
+    y0 <- c(y0,  M[1,2])
+    x1 <- c(x1,  M[2,1])
+    y1 <- c(y1,  M[2,2])
+
+    x0 <- c(x0,  M[2,1])
+    y0 <- c(y0,  M[2,2])
+    x1 <- c(x1,  M[3,1])
+    y1 <- c(y1,  M[3,2])
+
+
+    ## separate treatment for total internal reflection:
+    if(M[3,3]>0){
+        l <- 10  # transmitted ray
+    } else {
+        l <- ifelse(doreflect,0.3,0)   # reflected ray
+    }
+    
+    x0 <- c(x0,  M[3,1])
+    y0 <- c(y0,  M[3,2])
+    x1 <- c(x1,  M[3,1]-l*cos(M[3,3]))
+    y1 <- c(y1,  M[3,2]-l*sin(M[3,3]))
+
+    if(drawsegments){
+        segments(x0,y0,x1,y1,...)
+    } else {
+        return(cbind(x0,y0,x1,y1))
+    }
+}  # function drawray() closes
 
    
 #  bitofradial(M[1,1],M[1,2],lty=3)
 #  bitofradial(M[2,1],M[2,2],lty=3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
-}
+
 
 `tangential_ray` <- function(n = getOption("refractive_index"), ...){
     small <- 1e-9
