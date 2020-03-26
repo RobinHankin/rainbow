@@ -273,3 +273,79 @@ options("refractive_index" = 4/3)
 `caustic` <- function(d, n=getOption("refractive_index")){
     t(sapply(d,caustic_single))
 }
+
+`cart_to_mcdonald` <- function(P,n=getOption("refractive_index")){
+ ## converts a two-column matrix of Cartesian coordinates P to M,
+ ## McDonald's coordinate system.  See how, in McDonald's Fig. 2, the 
+
+    jj <- f(sqrt((4-n^2)/3))[3,,drop=TRUE]
+    x0 <- jj[1]
+    y0 <- jj[2]
+    theta <- atan(jj[3]) - pi/2
+
+    ## first subtract off the exit-point:
+    x <- P[,1]-x0
+    y <- P[,2]-y0
+
+    ## Now rotate:
+    mx <- -x*sin(theta) + y*cos(theta)
+    my <- +x*cos(theta) + y*sin(theta)
+
+    return(cbind(mx,my))
+}       
+
+`mcdonald` <- function(...){
+    n <- getOption("refractive_index")
+    plot(NA,xlim=c(-0.2,0.2),ylim=c(0.14, -0.02),asp=1,pty="m")
+
+    a <- seq(from=4.6,to=5.4,len=100)
+    points(cart_to_mcdonald(cbind(cos(a),sin(a))),type='l')
+    points(cart_to_mcdonald(caustic(seq(from=0.93,to=1,len=100))),type="o",col="yellow",lwd=3)
+
+    jj <- cart_to_mcdonald(f(sqrt((4-n^2)/3))[,1:2])
+    segments(jj[2,1],jj[2,2],jj[3,1],jj[3,2],lwd=2,col='red')
+    arrows(0,0,-0.2,0,lwd=2,col='red')    
+    text(-0.15,-0.005,"Cartesian ray")
+    jj <- cart_to_mcdonald(rbind(f(1)[3,1:2]))
+    points(jj ,type="p",pch=16,col="blue",lwd=3)
+    ## code taken from fraunhofer():
+
+    dvals <- sort(unique(
+        seq(from=0.40,to=1,len=100),
+        seq(from=0.90,to=1,len=100),
+        seq(from=0.99,to=1,len=100)
+        ))
+        
+    bvals <- seq(from=6.3,to=6.7,by=0.05)
+    
+    K <- matrix(NA,length(dvals),2)
+    for(b in bvals){
+        for(i in seq_along(dvals)){
+            ## Add start point of ray to M:
+            d <- dvals[i]
+            ## ray starts horizontally at (-3,d):
+            M <- rbind(c(-3,d,0),f(d,killreflect=TRUE))  
+            
+            ## Augment M with a fourth column giving the refractive index
+            ## of the ray:
+            M <- cbind(M,c(1,1/n,1/n,1)) # NB two n's
+            K[i,] <- raydist(b,M)
+        }
+        
+        points(cart_to_mcdonald(K), type='o', lwd=0.4, ...)
+    }
+
+
+
+    for(a in seq(from=0.52,to=1-small,by=0.005)){
+        drawray(a,doreflect=doreflect, ...)
+    }
+
+
+}
+
+
+
+pdf(file="mcdonald.pdf", height=5, width=9)
+mcdonald()
+dev.off()
