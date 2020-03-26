@@ -371,3 +371,15 @@ options("refractive_index" = 4/3)
 
 }
 
+`rainbow` <- function(...){
+    plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=c(-3,1),ylim=c(-2,1))
+    a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
+    points(sin(a),cos(a),type='l')
+    
+    RI <- seq(from=1.331,to=1.398,len=100)
+    
+    for(i in seq_along(RI)){
+        options("refractive_index" = RI[i])
+        cartesian_ray(n=RI[i],col=rainbow(length(RI))[i])
+    }
+}
