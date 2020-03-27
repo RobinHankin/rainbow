@@ -286,7 +286,7 @@ options("refractive_index" = 4/3)
 } 
 
 `caustic` <- function(d, leg=3, n=getOption("refractive_index")){
-    t(sapply(d,caustic_single,leg=leg))
+    t(sapply(d,caustic_single, leg=leg, n=n))
 }
 
 `cart_to_mcdonald` <- function(P,n=getOption("refractive_index")){
