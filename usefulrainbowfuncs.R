@@ -161,7 +161,9 @@ options("refractive_index" = 4/3)
     drawray(sqrt(16/15-n^2/15), ...)
 }
 
-`descartes` <- function(xlim=c(-5,1),ylim=c(-5,1), rays, doreflect=TRUE, dolegend=TRUE, ...){
+`descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),
+                        rays=seq(from=0.52,to=1-small,by=0.005),
+                        doreflect=TRUE, dolegend=TRUE, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
@@ -172,8 +174,8 @@ options("refractive_index" = 4/3)
     points(sin(a),cos(a),type='l')
 
     ## Draw rays
-    if(missing(rays)){rays <- seq(from=0.52,to=1-small,by=0.005)}
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
+
     ## Draw Cartesian, tangential, and maximal rays:
     cartesian_ray(col="red")
     tangential_ray(col="blue")
