@@ -84,11 +84,11 @@ options("refractive_index" = 4/3)
   normal <- atan2(p3[2],p3[1])
   ## (interior) angle of incidence:
   incidence <- M[2,3]-normal
-  if(abs(n*sin(incidence)) < 1){ # that is, if the ray can esape
-      M[3,3] <- pi+(asin(n*sin(incidence)) +  normal)
+  if(abs(n*sin(incidence)) < 1){ # that is, if the ray can escape
+      M[3,3] <- pi+(asin(n*sin(incidence)) +  normal)  # Snell
   } else { # total internal reflection...
       if(killreflect){
-          M[3,3] <- NA
+          M[3,3] <- NA # suppress reflected ray
       } else {
           M[3,3] <- normal -incidence
       }
