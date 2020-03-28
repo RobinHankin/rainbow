@@ -30,6 +30,7 @@ pdf(file="descartes4.pdf", title="Descartes figure 4", height=9, width=9)
 descartes(xlim=c(0.5,1),ylim=c(0,0.5),lwd=0.1,dolegend=FALSE)
 n <- getOption("refractive_index")
 points(caustic(seq(from=0,to=sqrt((4-n^2)/3),len=100),leg=2),type="l",col="yellow")
+points(caustic(seq(from=sqrt((4-n^2)/3),to=1,len=100),leg=1),type="l",col="yellow")
 legend("topright",pch=NA,lty=1,
        col=c("red","green","blue","yellow"),
        legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
