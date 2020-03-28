@@ -51,8 +51,8 @@ options("refractive_index" = 4/3)
 
 ## We follow the "Arbitrary ray".
 
-`f` <- function(d, killreflect=FALSE){
-  n <- getOption("refractive_index")
+`f` <- function(d, n=getOption("refractive_index"), killreflect=FALSE){
+
   i <- asin(d)
   
   M <- matrix(NA,3,3)
