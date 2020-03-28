@@ -37,6 +37,13 @@ options("refractive_index" = 4/3)
   segments(inner*x,inner*y,outer*x,outer*y,...)
 }
 
+## Draw the drop
+`drawdrop` <- function(...){
+    a <- seq(from=0,to=2*pi,len=1000)
+    points(cos(a),sin(a),type="l",...)
+}
+
+
 ## Function raytracer() defined below takes a single argument d, the
 ## distance from theoptical axis of the drop to the incoming ray.  It
 ## returns a 3x3 matrix M with rows corresponding to the three
@@ -170,8 +177,7 @@ options("refractive_index" = 4/3)
     plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
 
     ## plot droplet
-    a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
-    points(sin(a),cos(a),type='l')
+    drawdrop()
 
     ## Draw rays
     for(a in rays){ drawray(a,doreflect=doreflect, ...) }
@@ -232,8 +238,7 @@ options("refractive_index" = 4/3)
     plot(NA,xlab='',ylab='',asp=1,axes=FALSE,xlim=xlim,ylim=ylim)
 
     ## plot droplet
-    a <- seq(from=0,to=2*pi,len=1000)  # 'a' for angle
-    points(sin(a),cos(a),type='l')
+    drawdrop()
 
     K <- matrix(NA,length(dvals),2)
     for(b in bvals){
