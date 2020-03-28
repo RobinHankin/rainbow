@@ -37,13 +37,13 @@ options("refractive_index" = 4/3)
   segments(inner*x,inner*y,outer*x,outer*y,...)
 }
 
-## Function f() defined below takes a single argument d, the distance
-## from optical axis of the drop to the incoming ray.  It returns a
-## 3x3 matrix M with rows corresponding to the three refractive
-## points. The Cartesian coordinates of point i are given by M[i,1:2]
-## and the angle of the outgoing ray from that point is given by
-## M[i,3].  Angles are given in radians in the sense defined by
-## McDonald.  Note that this system is easily generalizable to the
+## Function raytracer() defined below takes a single argument d, the
+## distance from theoptical axis of the drop to the incoming ray.  It
+## returns a 3x3 matrix M with rows corresponding to the three
+## refractive points. The Cartesian coordinates of point i are given
+## by M[i,1:2] and the angle of the outgoing ray from that point is
+## given by M[i,3].  Angles are given in radians in the sense defined
+## by McDonald.  Note that this system is easily generalizable to the
 ## higher order bows.
 
 ## Notation follows McDonald's diagram 1 where possible, except the
@@ -51,7 +51,7 @@ options("refractive_index" = 4/3)
 
 ## We follow the "Arbitrary ray".
 
-`f` <- function(d, n=getOption("refractive_index"), killreflect=FALSE){
+`raytracer` <- function(d, n=getOption("refractive_index"), killreflect=FALSE){
 
   i <- asin(d)
   
@@ -97,7 +97,7 @@ options("refractive_index" = 4/3)
 }
 
 `drawray` <- function(d,doreflect=TRUE,drawsegments=TRUE, ...){
-    M <- f(d)
+    M <- raytracer(d)
     
     x0 <- -10
     y0 <- d
@@ -144,7 +144,7 @@ options("refractive_index" = 4/3)
     small <- 1e-9
     ## Draw tangential ray
     drawray(1-small,...)
-    M <- f(1)
+    M <- raytracer(1)
     p <- M[3,1:2]
     segments(
         p[1],p[2],
@@ -241,7 +241,7 @@ options("refractive_index" = 4/3)
             ## Add start point of ray to M:
             d <- dvals[i]
             ## ray starts horizontally at (-3,d):
-            M <- rbind(c(-3,d,0),f(d,killreflect=TRUE))  
+            M <- rbind(c(-3,d,0),raytracer(d,killreflect=TRUE))  
             
             ## Augment M with a fourth column giving the refractive index
             ## of the ray:
@@ -265,11 +265,11 @@ options("refractive_index" = 4/3)
 
 `caustic_single` <- function(d, leg=3, n=getOption("refractive_index")){
     stopifnot(length(d)==1)
-    if(d==1){return(drop(f(1)[leg,1:2]))}
+    if(d==1){return(drop(raytracer(1)[leg,1:2]))}
     small <- 1e-7
 
-    jj0 <- f(d-small/2)[leg,,drop=TRUE]
-    jj1 <- f(d+small/2)[leg,,drop=TRUE]
+    jj0 <- raytracer(d-small/2)[leg,,drop=TRUE]
+    jj1 <- raytracer(d+small/2)[leg,,drop=TRUE]
 
     x0 <- jj0[1]
     y0 <- jj0[2]
@@ -293,7 +293,7 @@ options("refractive_index" = 4/3)
  ## converts a two-column matrix of Cartesian coordinates P to M,
  ## McDonald's coordinate system.  See how, in McDonald's Fig. 2, the 
 
-    jj <- f(sqrt((4-n^2)/3))[3,,drop=TRUE]
+    jj <- raytracer(sqrt((4-n^2)/3))[3,,drop=TRUE]
     x0 <- jj[1]
     y0 <- jj[2]
     theta <- (jj[3]) - pi/2
@@ -319,7 +319,7 @@ options("refractive_index" = 4/3)
     points(cart_to_mcdonald(caustic(seq(from=0.93,to=1,len=100))),type="l",col="yellow",lwd=3)
 
     ## Draw the Cartesian ray:
-    jj <- cart_to_mcdonald(f(sqrt((4-n^2)/3))[,1:2])
+    jj <- cart_to_mcdonald(raytracer(sqrt((4-n^2)/3))[,1:2])
     segments(jj[2,1],jj[2,2],jj[3,1],jj[3,2],lwd=2,col='red')
     arrows(0,0,-0.2,0,lwd=2,col='red')    
     text(-0.15,-0.005,"Cartesian ray")
@@ -341,7 +341,7 @@ options("refractive_index" = 4/3)
             ## Add start point of ray to M:
             d <- dvals[i]
             ## ray starts horizontally at (-3,d):
-            M <- rbind(c(-3,d,0),f(d,killreflect=TRUE))  
+            M <- rbind(c(-3,d,0),raytracer(d,killreflect=TRUE))  
             
             ## Augment M with a fourth column giving the refractive index
             ## of the ray:
