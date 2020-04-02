@@ -1,5 +1,10 @@
 # Calculates intensity as a function of angle according to Young's
 # (modified) theory.
+
+## Reference is P. Laven 2017.  "Supernumerary arcs of rainbows:
+## Young's theory of interference".  Applied Optics, 56 (19):G104-G111
+
+
 source("usefulrainbowfuncs.R")
 options("refractive_index" = 1.333)  # consistent with Laven 2017
 
@@ -10,7 +15,7 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 ## Observe that, to 4 sig figs, fun(0.7287) = fun(0.9428) = 141, as
 ## per Fig 3 of Laven 2017.
 
-
+## fig3() is a helper function for drawfig3()
 `fig3` <- function(theta,n=getOption("refractive_index")){
     ## seek b: fun(b)=theta; if theta=141, should get c(0.7287,0.9428)
     b0 <- sqrt((4-n^2)/3)  ## observe that fun(b0) = 139.92 as per Laven
@@ -25,8 +30,10 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
         uniroot(f,c(0,b0),tol=1e-13)$root,  # red ray in Laven's Fig 3
         uniroot(f,c(b0,1),tol=1e-13)$root   # blue ray in Laven's Fig 3
     )                                       # (cyan line is the Cartesian ray)
+
 }
 
+## Function drawfig3() plots Laven's figure 3:
 `drawfig3` <- function(theta=141,n=getOption("refractive_index")){
     ## (could use descartes() here but we need more control)
     jj <- 1.3
