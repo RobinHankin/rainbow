@@ -150,10 +150,7 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 
 
 ## 'ang' is the scattering angle
-`drawfig10` <- function(
-                        ang=seq(from=139,to=145,len=100),
-                        roverlambda=100/0.65,x...
-                        ){
+`fig10` <- function(ang, roverlambda=100/0.65){
     
     d2 <- t(sapply(ang,fig3))
     ## row "i" of d2 is the two values of 'd' that give scattering angle ang[i]
@@ -171,9 +168,9 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
         int[,1]*exp(1i*(   path_length[,1])) + 
         int[,2]*exp(1i*(-1+path_length[,2]))
     )
-    
-    plot(ang,intensity_interfered,...)
-    abline(h=0)
+    return(intensity_interfered)
 }
 
-drawfig10()
+ang <- seq(from=139,to=145,len=100)
+plot(ang,fig10(ang))
+abline(h=0)
