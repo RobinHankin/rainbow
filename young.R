@@ -15,9 +15,20 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 ## Observe that, to 4 sig figs, fun(0.7287) = fun(0.9428) = 141, as
 ## per Fig 3 of Laven 2017.
 
-## fig3() is a helper function for drawfig3()
+`deriv_scattering_angle` <- function(d,small=1e-6){
+    (scattering_angle(d+small/2)-scattering_angle(d-small/2))/small
+}
+
+# intensity is (classically) the absolute value of reciprocal of
+# derivative of scattering angle:
+`intensity` <- function(d){1/abs(deriv_scattering_angle(d))}
+
+## fig3() is a helper function for drawfig3().  Given a scattering
+## angle theta, it returns the two values of d [called 'b' by Laven]
+## which result in a scattering angle of theta.  One is greater than
+## b0~= 0.8608, and one is smaller.
 `fig3` <- function(theta,n=getOption("refractive_index")){
-    ## seek b: fun(b)=theta; if theta=141, should get c(0.7287,0.9428)
+    ## We seek b: fun(b)=theta; if theta=141, should get c(0.7287,0.9428)
     b0 <- sqrt((4-n^2)/3)  ## observe that fun(b0) = 139.92 as per Laven
 
     ## Further observe that if n=4/3 we get f(b0) = 139.97
@@ -51,8 +62,6 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
     l <- 5
     segments(-1, 0,-1     ,1      ,lty=2,col="gray") # start point 
     segments(x0,y0,x0-y0*l,y0+x0*l,lty=2,col="gray") # end point
-
-    ## rays are assumed to be in phase at 
 
     points(caustic(
         seq(from=0,to=sqrt((4-n^2)/3),len=100),leg=2),
@@ -113,6 +122,9 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 ## micrometers and the drop has a notional radius of 100 um which
 ## gives lambda = 0.65/100 = 0.0065.
 
+## Function phase_diff() returns the difference in phase between the
+## two rays with scattering angle theta [see Laven's figure 3]
+
 `phase_diff` <- function(theta=141,lambda=0.0065){
 
     jj <- fig3(theta)  # jj[1] is the red ray, jj[2] is the blue ray
@@ -127,5 +139,41 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
     return(1+sin(2*delta))
 }
 
+## eqn1() gives the phase delay phi between entrance and exit planes
+## of the sphere; it is Laven's equation 1, p105.
+`eqn1` <- function(d, roverlambda, n=getOption("refractive_index")){
+    theta_i <- asin(d)
+    theta_r <- asin(d/n)
+    phase <- roverlambda*4*pi*(1-cos(theta_i) + 2*n*cos(theta_r))
+    return(phase)
+}
 
 
+## 'ang' is the scattering angle
+`drawfig10` <- function(
+                        ang=seq(from=139,to=145,len=100),
+                        roverlambda=100/0.65,x...
+                        ){
+    
+    d2 <- t(sapply(ang,fig3))
+    ## row "i" of d2 is the two values of 'd' that give scattering angle ang[i]
+    
+    int <- d2*NA
+    int[] <- sapply(d2,intensity)
+    ## row "i" of int is the intensities of the two rays
+    
+    path_length <- d2*NA
+    path_length[] <- sapply(d2,eqn1,roverlambda=roverlambda)
+    ## row "i" of path_length is the path lengths of the two rays
+    
+    ## The two rays interfere:
+    intensity_interfered <- abs(
+        int[,1]*exp(1i*(   path_length[,1])) + 
+        int[,2]*exp(1i*(-1+path_length[,2]))
+    )
+    
+    plot(ang,intensity_interfered,...)
+    abline(h=0)
+}
+
+drawfig10()
