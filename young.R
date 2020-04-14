@@ -21,7 +21,7 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 
 # intensity is (classically) the absolute value of reciprocal of
 # derivative of scattering angle:
-`intensity` <- function(d){1/abs(deriv_scattering_angle(d))}
+`intensityfun` <- function(d){1/abs(deriv_scattering_angle(d))}
 
 ## fig3() is a helper function for drawfig3().  Given a scattering
 ## angle theta, it returns the two values of d [called 'b' by Laven]
@@ -150,27 +150,36 @@ options("refractive_index" = 1.333)  # consistent with Laven 2017
 
 
 ## 'ang' is the scattering angle
-`fig10` <- function(ang, roverlambda=100/0.65){
+`fig10` <- function(ang, interfere=TRUE, gouy=c(3,2),roverlambda=100/0.65){
     
     d2 <- t(sapply(ang,fig3))
     ## row "i" of d2 is the two values of 'd' that give scattering angle ang[i]
     
-    int <- d2*NA
-    int[] <- sapply(d2,intensity)
+    intensity <- d2*NA
+    intensity[] <- sapply(d2,intensityfun)
     ## row "i" of int is the intensities of the two rays
     
     path_length <- d2*NA
     path_length[] <- sapply(d2,eqn1,roverlambda=roverlambda)
     ## row "i" of path_length is the path lengths of the two rays
     
-    ## The two rays interfere:
-    intensity_interfered <- abs(
-        int[,1]*exp(1i*(   path_length[,1])) + 
-        int[,2]*exp(1i*(-1+path_length[,2]))
-    )
-    return(intensity_interfered)
+    if(interfere){
+        ## The two rays interfere:
+        combined_intensity <- abs(
+            intensity[,1]*exp(1i*(gouy[1] + path_length[,1])) + 
+            intensity[,2]*exp(1i*(gouy[2] + path_length[,2]))
+        )
+    } else { # Descartes
+        combined_intensity <- sqrt(
+            intensity[,1]^2 + 
+            intensity[,2]^2
+        )
+    }
+        
+    return(combined_intensity)
 }
 
 ang <- seq(from=139,to=145,len=100)
-plot(ang,fig10(ang))
+plot  (ang,fig10(ang,interfere=TRUE ),col="blue",type="l")
+points(ang,fig10(ang,interfere=FALSE),col="red" ,type="l")
 abline(h=0)
