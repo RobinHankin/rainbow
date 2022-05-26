@@ -90,7 +90,7 @@ pdf(file="spectrum_realistic.pdf", title="spectrum (realistic)", height=9,width=
 spectrum(
     RI = seq(from = 1.331,  # RI for nominal red light, 700nm
              to   = 1.338,  # RI for nominal violet light, 425nm
-             len = 100)
+             len = 100),lwd=0.05)
     )
 dev.off()
 

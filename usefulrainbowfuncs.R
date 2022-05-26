@@ -386,7 +386,7 @@ options("refractive_index" = 4/3)
     o <- options()
     for(i in seq_along(RI)){
         options("refractive_index" = RI[i])
-        cartesian_ray(n=RI[i],col=rainbow(length(RI))[i])
+        cartesian_ray(n=RI[i],col=rainbow(length(RI))[i],...)
     }
     options(o)
 }
