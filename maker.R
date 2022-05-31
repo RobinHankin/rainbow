@@ -91,7 +91,10 @@ spectrum(
     RI = seq(from = 1.331,  # RI for nominal red light, 700nm
              to   = 1.338,  # RI for nominal violet light, 425nm
              len = 100),lwd=0.05)
-    )
+    
 dev.off()
 
 
+pdf(file="descartes5.pdf", title="Descartes figure 5",height=9, width=9)
+descartes(xlim=c(-2,0),ylim=c(-0.5,0),lwd=0.1,theta=-0.7)
+dev.off()

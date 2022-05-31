@@ -1,4 +1,4 @@
-## Fuctions here are called by rainbow.R
+# Fuctions here are called by rainbow.R
 
 options("refractive_index" = 4/3)
 
@@ -103,7 +103,7 @@ options("refractive_index" = 4/3)
   return(M)
 }
 
-`drawray` <- function(d,doreflect=TRUE,drawsegments=TRUE, ...){
+`drawray` <- function(d,doreflect=TRUE,drawsegments=TRUE, theta=0, ...){
     M <- raytracer(d)
     
     x0 <- -10
@@ -134,6 +134,20 @@ options("refractive_index" = 4/3)
     x1 <- c(x1,  M[3,1]-l*cos(M[3,3]))
     y1 <- c(y1,  M[3,2]-l*sin(M[3,3]))
 
+	jjx0 <- cos(theta)*x0 -sin(theta)*y0
+	jjx1 <- cos(theta)*x1 -sin(theta)*y1
+	jjy0 <- sin(theta)*x0 +cos(theta)*y0
+	jjy1 <- sin(theta)*x1 +cos(theta)*y1
+
+	x0 <- jjx0
+	x1 <- jjx1
+	y0 <- jjy0
+	y1 <- jjy1
+
+	
+
+
+
     if(drawsegments){
         segments(x0,y0,x1,y1,...)
     } else {
@@ -147,12 +161,17 @@ options("refractive_index" = 4/3)
 #  bitofradial(M[3,1],M[3,2],lty=3)
 
 
-`tangential_ray` <- function(n = getOption("refractive_index"), ...){
+`tangential_ray` <- function(n = getOption("refractive_index"), theta=0, ...){
     small <- 1e-9
     ## Draw tangential ray
-    drawray(1-small,...)
+    drawray(1-small,theta=theta,...)
     M <- raytracer(1)
     p <- M[3,1:2]
+    pp <- p
+    pp[1] <- cos(theta)*p[1] - sin(theta)*p[2]
+    pp[2] <- sin(theta)*p[1] + cos(theta)*p[2]
+    p <- pp
+
     segments(
         p[1],p[2],
         p[1] + 10*p[2],
@@ -160,17 +179,17 @@ options("refractive_index" = 4/3)
         ...)
 }
 
-`cartesian_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt((4-n^2)/3), ...)
+`cartesian_ray` <- function(n = getOption("refractive_index"), theta=0, ...){
+    drawray(sqrt((4-n^2)/3), theta=theta, ...)
 }
 
-`maximal_ray` <- function(n = getOption("refractive_index"), ...){
-    drawray(sqrt(16/15-n^2/15), ...)
+`maximal_ray` <- function(n = getOption("refractive_index"), theta=0, ...){
+    drawray(sqrt(16/15-n^2/15), theta=theta, ...)
 }
 
 `descartes` <- function(xlim=c(-5,1),ylim=c(-5,1),
                         rays=seq(from=0.52,to=1-small,by=0.005),
-                        doreflect=TRUE, dolegend=TRUE, ...){
+                        doreflect=TRUE, dolegend=TRUE, theta=0, ...){
     n <- getOption("refractive_index")
     small <- 1e-9  # nominal small value for numerical stability
 
@@ -180,12 +199,12 @@ options("refractive_index" = 4/3)
     drawdrop()
 
     ## Draw rays
-    for(a in rays){ drawray(a,doreflect=doreflect, ...) }
+    for(a in rays){ drawray(a,doreflect=doreflect, theta=theta, ...) }
 
     ## Draw Cartesian, tangential, and maximal rays:
-    cartesian_ray(col="red")
-    tangential_ray(col="blue")
-    maximal_ray(col="green")
+    cartesian_ray(col="red",theta=theta)
+    tangential_ray(col="blue",theta=theta)
+    maximal_ray(col="green",theta=theta)
     if(dolegend){
       legend("bottomright",pch=NA,lty=1,
              col=c("red","green","blue"),
