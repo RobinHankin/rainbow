@@ -78,6 +78,24 @@ legend("bottomright",pch=NA,lty=1,
        )
 dev.off()
 
+pdf(file="fraunhofer5.pdf", title="Fraunhofer figure 2", height=9, width=9)
+fraunhofer(xlim=c(0.3,1), ylim=c(-0.2,1), dolegend=FALSE,
+           bvals = seq(from=2.5,to=7.5,len=200),
+           dvals = sort(unique(c(
+               seq(from = 0.40, to = 1, len = 100),
+               seq(from = 0.96, to = 1, len = 100),
+               seq(from = 0.99, to = 1, len = 10)))))
+points(caustic(seq(from=0,to=sqrt((4-n^2)/3),len=100),leg=2),type="l",col="yellow")
+points(caustic(seq(from=sqrt((4-n^2)/3),to=1,len=100),leg=1),type="l",col="yellow")
+
+legend("topright",pch=NA,lty=1,
+       col=c("red","green","blue","yellow"),
+       legend=c("Cartesian ray","extremal ray","tangential ray","caustic")
+       )
+dev.off()
+
+
+
 pdf(file="mcdonald.pdf", title="McDonald",height=5, width=9)
 mcdonald()
 dev.off()
